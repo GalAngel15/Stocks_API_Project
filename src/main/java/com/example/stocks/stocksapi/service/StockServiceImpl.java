@@ -1,6 +1,7 @@
 package com.example.stocks.stocksapi.service;
 
 import com.example.stocks.stocksapi.boundary.GlobalQuoteResponse;
+import com.example.stocks.stocksapi.boundary.IntradayResponseBoundary;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,15 +20,18 @@ public class StockServiceImpl implements StockService{
         String url = BASE_URL + "?function=GLOBAL_QUOTE&symbol=" + symbol + "&apikey=" + API_KEY;
         RestTemplate restTemplate = new RestTemplate();
 
-        try {
-            GlobalQuoteResponse response = restTemplate.getForObject(url, GlobalQuoteResponse.class);
-            if (response != null && response.getGlobalQuote() != null) {
-                return response.getGlobalQuote();
-            } else {
-                throw new RuntimeException("לא ניתן היה לקבל את המידע עבור המניה: " + symbol);
-            }
-        } catch (HttpClientErrorException e) {
-            throw new RuntimeException("שגיאה בקריאת ה-API: " + e.getMessage());
-        }
+        // הדפס את התגובה הגולמית
+        String rawResponse = restTemplate.getForObject(url, String.class);
+        System.out.println("Raw Response: " + rawResponse);
+
+        return restTemplate.getForObject(url, GlobalQuoteResponse.class).getGlobalQuote();
+    }
+
+
+    @Override
+    public IntradayResponseBoundary getIntraday(String symbol, String interval) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = BASE_URL + "?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=" + interval + "&apikey=" + API_KEY;
+        return restTemplate.getForObject(url, IntradayResponseBoundary.class);
     }
 }
