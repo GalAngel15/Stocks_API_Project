@@ -19,7 +19,7 @@ public class IntradayResponseBoundary {
 
     @JsonAnySetter
     public void setTimeSeries(String key, Map<String, TimeSeriesDataBoundary> value) {
-        if (key.startsWith("Time Series")) {
+        if (key.contains("Time Series")) {
             timeSeries.put(key, value);
         }
     }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface StockService {
     public GlobalQuoteResponse.GlobalQuote getStockQuote(String symbol);
     public List<IntradayDataPoint> getIntraday(String symbol, String interval);
+    public List<IntradayDataPoint> getTimeSeries(String function, String symbol);
 }

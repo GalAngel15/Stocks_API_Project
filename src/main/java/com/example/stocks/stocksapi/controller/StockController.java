@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = { "/stocks" })
+@RequestMapping(path = { "/stock" })
 public class StockController {
 
     private final StockService stockService;
@@ -21,16 +21,23 @@ public class StockController {
         this.stockService = stockService;
     }
 
-    @GetMapping("/stock")
+    @GetMapping
     public GlobalQuoteResponse.GlobalQuote getStockQuote(@RequestParam String symbol) {
         return stockService.getStockQuote(symbol);
     }
 
-    @GetMapping("/stock/intraday")
+    @GetMapping("/intraday")
     public List<IntradayDataPoint> getIntraday(
             @RequestParam String symbol,
             @RequestParam(required = false, defaultValue = "5min") String interval
     ) {
         return stockService.getIntraday(symbol, interval);
+    }
+    @GetMapping("/time-series")
+    public List<IntradayDataPoint> getTimeSeries(
+            @RequestParam String function,
+            @RequestParam String symbol
+    ) {
+        return stockService.getTimeSeries(function,symbol);
     }
 }
