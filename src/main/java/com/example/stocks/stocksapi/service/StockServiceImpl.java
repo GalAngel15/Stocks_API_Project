@@ -1,11 +1,17 @@
 package com.example.stocks.stocksapi.service;
 
 import com.example.stocks.stocksapi.boundary.GlobalQuoteResponse;
+import com.example.stocks.stocksapi.boundary.IntradayDataPoint;
 import com.example.stocks.stocksapi.boundary.IntradayResponseBoundary;
+import com.example.stocks.stocksapi.boundary.TimeSeriesDataBoundary;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -29,9 +35,24 @@ public class StockServiceImpl implements StockService{
 
 
     @Override
-    public IntradayResponseBoundary getIntraday(String symbol, String interval) {
+    public List<IntradayDataPoint> getIntraday(String symbol, String interval) {
         RestTemplate restTemplate = new RestTemplate();
         String url = BASE_URL + "?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=" + interval + "&apikey=" + API_KEY;
-        return restTemplate.getForObject(url, IntradayResponseBoundary.class);
+        Map<String, Map<String, TimeSeriesDataBoundary>> timeSeries = restTemplate.getForObject(url, IntradayResponseBoundary.class).getTimeSeries();
+        List<IntradayDataPoint> response = new ArrayList<>();
+        for(Map.Entry<String,Map<String, TimeSeriesDataBoundary>> entry: timeSeries.entrySet()){
+            for(Map.Entry<String,TimeSeriesDataBoundary> innerEntry: entry.getValue().entrySet()){
+                IntradayDataPoint point=new IntradayDataPoint(
+                        innerEntry.getKey(),
+                        innerEntry.getValue().getOpen(),
+                        innerEntry.getValue().getHigh(),
+                        innerEntry.getValue().getLow(),
+                        innerEntry.getValue().getClose(),
+                        innerEntry.getValue().getVolume()
+                );
+                response.add(point);
+            }
+        }
+        return response;
     }
 }
