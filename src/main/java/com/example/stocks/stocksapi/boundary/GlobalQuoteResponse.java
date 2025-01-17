@@ -1,20 +1,17 @@
 package com.example.stocks.stocksapi.boundary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class GlobalQuoteResponse {
 
     @JsonProperty("Global Quote")
     private GlobalQuote globalQuote;
 
-    public GlobalQuote getGlobalQuote() {
-        return globalQuote;
-    }
-
-    public void setGlobalQuote(GlobalQuote globalQuote) {
-        this.globalQuote = globalQuote;
-    }
-
+    @Getter
     public static class GlobalQuote {
 
         @JsonProperty("01. symbol")
@@ -47,6 +44,5 @@ public class GlobalQuoteResponse {
         @JsonProperty("10. change percent")
         private String changePercent;
 
-        // Getters and Setters
     }
 }

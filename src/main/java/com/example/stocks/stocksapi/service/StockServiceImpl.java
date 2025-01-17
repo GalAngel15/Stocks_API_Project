@@ -26,27 +26,62 @@ public class StockServiceImpl implements StockService {
     @Override
     public GlobalQuoteResponse.GlobalQuote getStockQuote(String symbol) {
         String url = BASE_URL + "?function=GLOBAL_QUOTE&symbol=" + symbol + "&apikey=" + API_KEY;
-        return restTemplate.getForObject(url, GlobalQuoteResponse.class).getGlobalQuote();
+        try {
+            GlobalQuoteResponse response = restTemplate.getForObject(url, GlobalQuoteResponse.class);
+            if (response == null || response.getGlobalQuote() == null || response.getGlobalQuote().getSymbol() == null) {
+                throw new IllegalArgumentException("Stock not found: " + symbol);
+            }
+            return response.getGlobalQuote();
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching stock quote for symbol: " + symbol, e);
+        }
     }
 
 
     @Override
     public List<IntradayDataPoint> getIntraday(String symbol, String interval) {
+        if (symbol == null || symbol.isBlank()) {
+            throw new IllegalArgumentException("Symbol cannot be null or empty.");
+        }
+        if (interval == null || interval.isBlank()) {
+            throw new IllegalArgumentException("Interval cannot be null or empty.");
+        }
         String url = BASE_URL
                 + "?function=TIME_SERIES_INTRADAY&symbol=" + symbol
                 + "&interval=" + interval
                 + "&apikey=" + API_KEY;
-        return mapTimeSeriesToDataPoints(restTemplate.getForObject(url, IntradayResponseBoundary.class).getTimeSeries());
+        try {
+            IntradayResponseBoundary response = restTemplate.getForObject(url, IntradayResponseBoundary.class);
+            if (response == null || response.getTimeSeries() == null) {
+                throw new RuntimeException("Failed to fetch intraday data. Response is empty.");
+            }
+            return mapTimeSeriesToDataPoints(response.getTimeSeries());
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching intraday data for symbol: " + symbol, e);
+        }
     }
 
     @Override
     public List<IntradayDataPoint> getTimeSeries(String function, String symbol) {
+        if (symbol == null || symbol.isBlank()) {
+            throw new IllegalArgumentException("Symbol cannot be null or empty.");
+        }
+        if (function == null || function.isBlank()) {
+            throw new IllegalArgumentException("Function cannot be null or empty.");
+        }
         String url = BASE_URL
                 + "?function=" + function
                 + "&symbol=" + symbol
                 + "&apikey=" + API_KEY;
-        return mapTimeSeriesToDataPoints(restTemplate.getForObject(url, IntradayResponseBoundary.class).getTimeSeries());
-
+        try {
+            IntradayResponseBoundary response = restTemplate.getForObject(url, IntradayResponseBoundary.class);
+            if (response == null || response.getTimeSeries() == null) {
+                throw new RuntimeException("Failed to fetch intraday data. Response is empty.");
+            }
+            return mapTimeSeriesToDataPoints(response.getTimeSeries());
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching intraday data for symbol: " + symbol, e);
+        }
     }
 
     @Override
@@ -58,17 +93,21 @@ public class StockServiceImpl implements StockService {
                 + "&time_period=" + params.getTime_period()
                 + "&series_type=" + params.getSeries_type()
                 + "&apikey=" + API_KEY;
-
-        SmaResponseBoundary response = restTemplate.getForObject(url, SmaResponseBoundary.class);
-
-
-        return response
-                .getTechnicalAnalysis()
-                .entrySet()
-                .stream()
-                .map(entry ->
-                        new SmaBoundary(entry.getKey(), entry.getValue().getSma()))
-                .collect(Collectors.toList());
+        try {
+            SmaResponseBoundary response = restTemplate.getForObject(url, SmaResponseBoundary.class);
+            if (response == null || response.getTechnicalAnalysis() == null) {
+                throw new RuntimeException("Failed to fetch indicator data. Response is empty.");
+            }
+            return response
+                    .getTechnicalAnalysis()
+                    .entrySet()
+                    .stream()
+                    .map(entry ->
+                            new SmaBoundary(entry.getKey(), entry.getValue().getSma()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching indicator data for symbol: " + params.getSymbol(), e);
+        }
     }
 
     private List<IntradayDataPoint> mapTimeSeriesToDataPoints(Map<String, Map<String, TimeSeriesDataBoundary>> timeSeries) {
