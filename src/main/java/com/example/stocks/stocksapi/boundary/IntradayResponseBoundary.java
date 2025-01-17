@@ -8,7 +8,8 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter @Setter
+@Getter
+@Setter
 public class IntradayResponseBoundary {
 
     @JsonProperty("Meta Data")

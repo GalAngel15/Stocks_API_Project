@@ -18,7 +18,7 @@ public class TimeSeriesDataBoundary {
     private double low;
 
     @JsonProperty("4. close")
-    private double close=0.0;
+    private double close = 0.0;
 
     @JsonProperty("5. volume")
     private long volume;

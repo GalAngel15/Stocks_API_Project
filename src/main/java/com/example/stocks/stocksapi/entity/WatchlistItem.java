@@ -16,11 +16,13 @@ public class WatchlistItem {
     private String stockSymbol;
     private double price;
 
-    public WatchlistItem() {}
+    public WatchlistItem() {
+    }
 
     public WatchlistItem(String stockSymbol) {
         this.stockSymbol = stockSymbol;
     }
+
     public WatchlistItem(String stockSymbol, double price) {
         this.stockSymbol = stockSymbol;
         this.price = price;

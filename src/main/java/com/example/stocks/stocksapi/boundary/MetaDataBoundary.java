@@ -7,7 +7,8 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class MetaDataBoundary {
 
     @JsonProperty("1. Information")

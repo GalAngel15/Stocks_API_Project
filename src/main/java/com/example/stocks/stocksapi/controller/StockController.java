@@ -1,18 +1,13 @@
 package com.example.stocks.stocksapi.controller;
 
-import com.example.stocks.stocksapi.boundary.GlobalQuoteResponse;
-import com.example.stocks.stocksapi.boundary.IntradayDataPoint;
-import com.example.stocks.stocksapi.boundary.IntradayResponseBoundary;
+import com.example.stocks.stocksapi.boundary.*;
 import com.example.stocks.stocksapi.service.StockService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = { "/stock" })
+@RequestMapping(path = {"/stock"})
 public class StockController {
 
     private final StockService stockService;
@@ -33,11 +28,23 @@ public class StockController {
     ) {
         return stockService.getIntraday(symbol, interval);
     }
+
     @GetMapping("/time-series")
     public List<IntradayDataPoint> getTimeSeries(
-            @RequestParam String function,
+            @RequestParam(required = false, defaultValue = "TIME_SERIES_DAILY") String function,
             @RequestParam String symbol
     ) {
-        return stockService.getTimeSeries(function,symbol);
+        return stockService.getTimeSeries(function, symbol);
+    }
+
+    @GetMapping("/indicators")
+    public List<SmaBoundary> getIndicator(
+            @RequestParam String function,
+            @RequestParam String symbol,
+            @RequestParam String interval,
+            @RequestParam int time_period,
+            @RequestParam String series_type
+    ) {
+        return stockService.getIndicator(new TechIndicatorsBoundary(function, symbol, interval, time_period, series_type));
     }
 }
