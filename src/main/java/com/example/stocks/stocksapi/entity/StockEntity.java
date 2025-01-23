@@ -1,9 +1,10 @@
 package com.example.stocks.stocksapi.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
-@Entity
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "stocks")
 public class StockEntity {
 
     @Id

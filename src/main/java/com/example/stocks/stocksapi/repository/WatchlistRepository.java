@@ -1,11 +1,11 @@
 package com.example.stocks.stocksapi.repository;
 
 import com.example.stocks.stocksapi.entity.WatchlistItem;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WatchlistRepository extends JpaRepository<WatchlistItem, Long> {
+public interface WatchlistRepository extends MongoRepository<WatchlistItem, Long> {
     boolean existsByStockSymbol(String stockSymbol);
 
     void deleteByStockSymbol(String stockSymbol);

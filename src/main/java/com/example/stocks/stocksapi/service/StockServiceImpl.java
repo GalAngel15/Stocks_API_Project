@@ -2,7 +2,7 @@ package com.example.stocks.stocksapi.service;
 
 import com.example.stocks.stocksapi.boundary.*;
 import com.example.stocks.stocksapi.utils.RestTemplateProvider;
-import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class StockServiceImpl implements StockService {
-    private final Dotenv dotenv = Dotenv.load();
-    private final String API_KEY = dotenv.get("ALPHA_VANTAGE_API_KEY");
+    @Value("${ALPHA_VANTAGE_API_KEY}")
+    private String API_KEY;
     private final String BASE_URL = "https://www.alphavantage.co/query";
     private final RestTemplate restTemplate;
 

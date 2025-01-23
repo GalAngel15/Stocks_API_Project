@@ -1,7 +1,7 @@
 package com.example.stocks.stocksapi.controller;
 
 import com.example.stocks.stocksapi.service.WatchlistService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
