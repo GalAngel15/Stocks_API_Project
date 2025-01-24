@@ -1,5 +1,7 @@
 package dev.galAngel.stocks.stocksapi.controller;
 
+import dev.galAngel.stocks.stocksapi.boundary.WatchlistItemBoundary;
+import dev.galAngel.stocks.stocksapi.entity.WatchlistItem;
 import dev.galAngel.stocks.stocksapi.service.WatchlistService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ public class WatchlistController {
     }
 
     @GetMapping
-    public List<String> getWatchlist() {
+    public List<WatchlistItemBoundary> getWatchlist() {
         return watchlistService.getAllWatchlistItems();
     }
 

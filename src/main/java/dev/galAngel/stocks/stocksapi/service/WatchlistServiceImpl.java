@@ -1,5 +1,6 @@
 package dev.galAngel.stocks.stocksapi.service;
 
+import dev.galAngel.stocks.stocksapi.boundary.WatchlistItemBoundary;
 import dev.galAngel.stocks.stocksapi.entity.WatchlistItem;
 import dev.galAngel.stocks.stocksapi.repository.WatchlistRepository;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,12 @@ public class WatchlistServiceImpl implements WatchlistService {
         this.watchlistRepository = watchlistRepository;
     }
 
-    public List<String> getAllWatchlistItems() {
-        return watchlistRepository.findAll()
+    public List<WatchlistItemBoundary> getAllWatchlistItems() {
+        return watchlistRepository
+                .findAll()
                 .stream()
-                .map(WatchlistItem::getStockSymbol)
-                .collect(Collectors.toList());
+                .map(item-> new WatchlistItemBoundary(item.getStockSymbol(), item.getPrice()))
+                .toList();
     }
 
     public String addStock(String stockSymbol) {

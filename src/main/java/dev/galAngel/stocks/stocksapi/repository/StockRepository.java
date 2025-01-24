@@ -1,6 +1,5 @@
 package dev.galAngel.stocks.stocksapi.repository;
 
-import dev.galAngel.stocks.stocksapi.entity.StockEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 

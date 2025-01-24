@@ -1,10 +1,13 @@
 package dev.galAngel.stocks.stocksapi.service;
 
+import dev.galAngel.stocks.stocksapi.boundary.WatchlistItemBoundary;
+import dev.galAngel.stocks.stocksapi.entity.WatchlistItem;
+
 import java.util.List;
 
 public interface WatchlistService {
 
-    List<String> getAllWatchlistItems();
+    List<WatchlistItemBoundary> getAllWatchlistItems();
 
     String addStock(String stockSymbol);
 
