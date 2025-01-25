@@ -24,7 +24,7 @@ public class WatchlistController {
     }
 
     @PostMapping("/{stockSymbol}")
-    public String addStockToWatchlist(@PathVariable String stockSymbol) {
+    public WatchlistItemBoundary addStockToWatchlist(@PathVariable String stockSymbol) {
         return watchlistService.addStock(stockSymbol);
     }
 

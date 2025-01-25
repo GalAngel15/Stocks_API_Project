@@ -9,7 +9,7 @@ public interface WatchlistService {
 
     List<WatchlistItemBoundary> getAllWatchlistItems();
 
-    String addStock(String stockSymbol);
+    WatchlistItemBoundary addStock(String stockSymbol);
 
     void removeStock(String stockSymbol);
 

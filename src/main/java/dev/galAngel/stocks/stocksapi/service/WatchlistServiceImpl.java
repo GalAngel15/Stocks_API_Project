@@ -25,12 +25,13 @@ public class WatchlistServiceImpl implements WatchlistService {
                 .toList();
     }
 
-    public String addStock(String stockSymbol) {
+    public WatchlistItemBoundary addStock(String stockSymbol) {
         if (!watchlistRepository.existsByStockSymbol(stockSymbol)) {
-            watchlistRepository.save(new WatchlistItem(stockSymbol));
-            return stockSymbol;
+            WatchlistItem watchlistItem = new WatchlistItem(stockSymbol);
+            watchlistRepository.save(watchlistItem);
+            return new WatchlistItemBoundary(watchlistItem.getStockSymbol(), watchlistItem.getPrice());
         }
-        return "Stock already exists in watchlist";
+        return null;
     }
 
     public void removeStock(String stockSymbol) {
