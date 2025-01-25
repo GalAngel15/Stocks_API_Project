@@ -30,9 +30,8 @@ public class WatchlistController {
 
     @Transactional
     @DeleteMapping("/{symbol}")
-    public String removeStockFromWatchlist(@PathVariable String symbol) {
+    public void removeStockFromWatchlist(@PathVariable String symbol) {
         watchlistService.removeStock(symbol);
-        return "Stock removed from watchlist";
     }
 
     @DeleteMapping
