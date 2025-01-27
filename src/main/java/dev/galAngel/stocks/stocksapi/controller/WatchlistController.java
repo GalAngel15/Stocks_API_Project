@@ -28,6 +28,11 @@ public class WatchlistController {
         return watchlistService.addStock(stockSymbol);
     }
 
+    @PutMapping("/{stockSymbol}")
+    public WatchlistItemBoundary updateStockInWatchlist(@PathVariable String stockSymbol, @PathVariable double price) {
+        return watchlistService.updateStockPrice(stockSymbol, price);
+    }
+
     @Transactional
     @DeleteMapping("/{symbol}")
     public void removeStockFromWatchlist(@PathVariable String symbol) {

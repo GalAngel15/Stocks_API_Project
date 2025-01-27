@@ -26,4 +26,11 @@ public class WatchlistItem {
         this.price = price;
     }
 
+    public boolean setPrice(double price) {
+        if(price < 0) {
+            return false;
+        }
+        this.price = price;
+        return true;
+    }
 }

@@ -18,9 +18,11 @@ public class StockServiceImpl implements StockService {
     private String API_KEY;
     private final String BASE_URL = "https://www.alphavantage.co/query";
     private final RestTemplate restTemplate;
+    private final WatchlistService watchlistService;
 
-    public StockServiceImpl(RestTemplateProvider provider) {
+    public StockServiceImpl(RestTemplateProvider provider, WatchlistService watchlistService) {
         this.restTemplate = provider.getRestTemplate();
+        this.watchlistService = watchlistService;
     }
 
     @Override
@@ -55,7 +57,7 @@ public class StockServiceImpl implements StockService {
             if (response == null || response.getTimeSeries() == null) {
                 throw new RuntimeException("Failed to fetch intraday data. Response is empty.");
             }
-            return mapTimeSeriesToDataPoints(response.getTimeSeries());
+            return mapTimeSeriesToDataPoints(response.getTimeSeries(),symbol);
         } catch (Exception e) {
             throw new RuntimeException("Error fetching intraday data for symbol: " + symbol, e);
         }
@@ -78,7 +80,7 @@ public class StockServiceImpl implements StockService {
             if (response == null || response.getTimeSeries() == null) {
                 throw new RuntimeException("Failed to fetch intraday data. Response is empty.");
             }
-            return mapTimeSeriesToDataPoints(response.getTimeSeries());
+            return mapTimeSeriesToDataPoints(response.getTimeSeries(),symbol);
         } catch (Exception e) {
             throw new RuntimeException("Error fetching intraday data for symbol: " + symbol, e);
         }
@@ -110,7 +112,7 @@ public class StockServiceImpl implements StockService {
         }
     }
 
-    private List<IntradayDataPoint> mapTimeSeriesToDataPoints(Map<String, Map<String, TimeSeriesDataBoundary>> timeSeries) {
+    private List<IntradayDataPoint> mapTimeSeriesToDataPoints(Map<String, Map<String, TimeSeriesDataBoundary>> timeSeries,String symbol) {
         List<IntradayDataPoint> response = new ArrayList<>();
         for (Map.Entry<String, Map<String, TimeSeriesDataBoundary>> entry : timeSeries.entrySet()) {
             for (Map.Entry<String, TimeSeriesDataBoundary> innerEntry : entry.getValue().entrySet()) {
@@ -125,6 +127,7 @@ public class StockServiceImpl implements StockService {
                 response.add(point);
             }
         }
+        watchlistService.updateStockPrice(symbol.toUpperCase(), response.getFirst().getClose());
         return response;
     }
 

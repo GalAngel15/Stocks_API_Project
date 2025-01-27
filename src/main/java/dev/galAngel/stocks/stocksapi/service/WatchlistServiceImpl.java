@@ -26,7 +26,7 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     public WatchlistItemBoundary addStock(String stockSymbol) {
-        if (!watchlistRepository.existsByStockSymbol(stockSymbol)) {
+        if (watchlistRepository.findByStockSymbol(stockSymbol)==null) {
             WatchlistItem watchlistItem = new WatchlistItem(stockSymbol);
             watchlistRepository.save(watchlistItem);
             return new WatchlistItemBoundary(watchlistItem.getStockSymbol(), watchlistItem.getPrice());
@@ -40,5 +40,16 @@ public class WatchlistServiceImpl implements WatchlistService {
 
     public void clearWatchlist() {
         watchlistRepository.deleteAll();
+    }
+
+    @Override
+    public WatchlistItemBoundary updateStockPrice(String stockSymbol, double price) {
+        WatchlistItem watchlistItem = watchlistRepository.findByStockSymbol(stockSymbol);
+        if (watchlistItem==null) {
+            return null;
+        }
+        watchlistItem.setPrice(price);
+        watchlistRepository.save(watchlistItem);
+        return new WatchlistItemBoundary(watchlistItem.getStockSymbol(), watchlistItem.getPrice());
     }
 }

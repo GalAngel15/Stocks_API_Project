@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WatchlistRepository extends MongoRepository<WatchlistItem, Long> {
-    boolean existsByStockSymbol(String stockSymbol);
-
+    WatchlistItem findByStockSymbol(String stockSymbol);
     void deleteByStockSymbol(String stockSymbol);
 }

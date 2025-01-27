@@ -15,4 +15,5 @@ public interface WatchlistService {
 
     void clearWatchlist();
 
+    WatchlistItemBoundary updateStockPrice(String stockSymbol, double price);
 }
