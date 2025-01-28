@@ -1,19 +1,15 @@
 package dev.galAngel.stocks.stocksapi.service;
 
-import dev.galAngel.stocks.stocksapi.boundary.WatchlistItemBoundary;
-import dev.galAngel.stocks.stocksapi.entity.WatchlistItem;
+import dev.galAngel.stocks.stocksapi.entity.Watchlist;
 
 import java.util.List;
 
 public interface WatchlistService {
-
-    List<WatchlistItemBoundary> getAllWatchlistItems();
-
-    WatchlistItemBoundary addStock(String stockSymbol);
-
-    void removeStock(String stockSymbol);
-
-    void clearWatchlist();
-
-    WatchlistItemBoundary updateStockPrice(String stockSymbol, double price);
+    Watchlist createWatchlist(String name);
+    List<Watchlist> getAllWatchlists();
+    Watchlist getWatchlistByName(String name);
+    void deleteWatchlist(String name);
+    Watchlist addStockToWatchlist(String listName, String stockSymbol);
+    Watchlist removeStockFromWatchlist(String listId, String stockSymbol);
 }
+

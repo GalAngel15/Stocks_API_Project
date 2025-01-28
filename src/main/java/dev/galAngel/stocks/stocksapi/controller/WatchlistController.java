@@ -1,46 +1,58 @@
 package dev.galAngel.stocks.stocksapi.controller;
 
-import dev.galAngel.stocks.stocksapi.boundary.WatchlistItemBoundary;
-import dev.galAngel.stocks.stocksapi.entity.WatchlistItem;
+import dev.galAngel.stocks.stocksapi.boundary.StockBoundary;
+import dev.galAngel.stocks.stocksapi.entity.Watchlist;
+import dev.galAngel.stocks.stocksapi.service.StockEntityService;
 import dev.galAngel.stocks.stocksapi.service.WatchlistService;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/watchlist")
+@RequestMapping("/watchlists")
 public class WatchlistController {
 
     private final WatchlistService watchlistService;
+    private final StockEntityService stockService;
 
-    public WatchlistController(WatchlistService watchlistService) {
+    public WatchlistController(WatchlistService watchlistService, StockEntityService stockService)
+    {
         this.watchlistService = watchlistService;
+        this.stockService = stockService;
+    }
+
+    @PostMapping
+    public Watchlist createWatchlist(@RequestParam String name) {
+        return watchlistService.createWatchlist(name);
     }
 
     @GetMapping
-    public List<WatchlistItemBoundary> getWatchlist() {
-        return watchlistService.getAllWatchlistItems();
+    public List<Watchlist> getAllWatchlists() {
+        return watchlistService.getAllWatchlists();
     }
 
-    @PostMapping("/{stockSymbol}")
-    public WatchlistItemBoundary addStockToWatchlist(@PathVariable String stockSymbol) {
-        return watchlistService.addStock(stockSymbol);
+    @GetMapping
+    public List<StockBoundary> getAllStocks() {
+        return stockService.getAllStocks();
     }
 
-    @PutMapping("/{stockSymbol}")
-    public WatchlistItemBoundary updateStockInWatchlist(@PathVariable String stockSymbol, @PathVariable double price) {
-        return watchlistService.updateStockPrice(stockSymbol, price);
+    @GetMapping("/{name}")
+    public Watchlist getWatchlistByName(@PathVariable String name) {
+        return watchlistService.getWatchlistByName(name);
     }
 
-    @Transactional
-    @DeleteMapping("/{symbol}")
-    public void removeStockFromWatchlist(@PathVariable String symbol) {
-        watchlistService.removeStock(symbol);
+    @DeleteMapping("/{name}")
+    public void deleteWatchlist(@PathVariable String name) {
+        watchlistService.deleteWatchlist(name);
     }
 
-    @DeleteMapping
-    public void clearWatchlist() {
-        watchlistService.clearWatchlist();
+    @PutMapping("/{name}/add-stock")
+    public Watchlist addStockToWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
+        return watchlistService.addStockToWatchlist(name, stockSymbol);
+    }
+
+    @PutMapping("/{name}/remove-stock")
+    public Watchlist removeStockFromWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
+        return watchlistService.removeStockFromWatchlist(name, stockSymbol);
     }
 }

@@ -5,19 +5,19 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class WatchlistItemBoundary {
+public class StockBoundary {
 
     private String stockSymbol;
     private double price;
 
-    public WatchlistItemBoundary() {
+    public StockBoundary() {
     }
 
-    public WatchlistItemBoundary(String stockSymbol) {
+    public StockBoundary(String stockSymbol) {
         this.stockSymbol = stockSymbol;
     }
 
-    public WatchlistItemBoundary(String stockSymbol, double price) {
+    public StockBoundary(String stockSymbol, double price) {
         this.stockSymbol = stockSymbol;
         this.price = price;
     }

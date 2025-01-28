@@ -18,11 +18,11 @@ public class StockServiceImpl implements StockService {
     private String API_KEY;
     private final String BASE_URL = "https://www.alphavantage.co/query";
     private final RestTemplate restTemplate;
-    private final WatchlistService watchlistService;
+    private final StockEntityService stockEntityService;
 
-    public StockServiceImpl(RestTemplateProvider provider, WatchlistService watchlistService) {
+    public StockServiceImpl(RestTemplateProvider provider, StockEntityService stockEntityService) {
         this.restTemplate = provider.getRestTemplate();
-        this.watchlistService = watchlistService;
+        this.stockEntityService = stockEntityService;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class StockServiceImpl implements StockService {
                 response.add(point);
             }
         }
-        watchlistService.updateStockPrice(symbol.toUpperCase(), response.getFirst().getClose());
+        stockEntityService.updateStockPrice(symbol.toUpperCase(), response.getFirst().getClose());
         return response;
     }
 

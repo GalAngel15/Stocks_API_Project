@@ -1,55 +1,63 @@
 package dev.galAngel.stocks.stocksapi.service;
 
-import dev.galAngel.stocks.stocksapi.boundary.WatchlistItemBoundary;
-import dev.galAngel.stocks.stocksapi.entity.WatchlistItem;
+import dev.galAngel.stocks.stocksapi.entity.StockEntity;
+import dev.galAngel.stocks.stocksapi.entity.Watchlist;
+import dev.galAngel.stocks.stocksapi.repository.StockRepository;
 import dev.galAngel.stocks.stocksapi.repository.WatchlistRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class WatchlistServiceImpl implements WatchlistService {
 
     private final WatchlistRepository watchlistRepository;
+    private final StockEntityService stockService;
 
-    public WatchlistServiceImpl(WatchlistRepository watchlistRepository) {
+    public WatchlistServiceImpl(WatchlistRepository watchlistRepository,StockEntityService stockService) {
         this.watchlistRepository = watchlistRepository;
+        this.stockService=stockService;
     }
 
-    public List<WatchlistItemBoundary> getAllWatchlistItems() {
-        return watchlistRepository
-                .findAll()
-                .stream()
-                .map(item-> new WatchlistItemBoundary(item.getStockSymbol(), item.getPrice()))
-                .toList();
+    @Override
+    public Watchlist createWatchlist(String name) {
+        Watchlist watchlist = new Watchlist(name);
+        return watchlistRepository.save(watchlist);
     }
 
-    public WatchlistItemBoundary addStock(String stockSymbol) {
-        if (watchlistRepository.findByStockSymbol(stockSymbol)==null) {
-            WatchlistItem watchlistItem = new WatchlistItem(stockSymbol);
-            watchlistRepository.save(watchlistItem);
-            return new WatchlistItemBoundary(watchlistItem.getStockSymbol(), watchlistItem.getPrice());
+    @Override
+    public List<Watchlist> getAllWatchlists() {
+        return watchlistRepository.findAll();
+    }
+
+    @Override
+    public Watchlist getWatchlistByName(String name) {
+        return watchlistRepository.findByName(name);
+    }
+
+    @Override
+    public void deleteWatchlist(String name) {
+        watchlistRepository.deleteByName(name);
+    }
+
+    @Override
+    public Watchlist addStockToWatchlist(String listName, String stockSymbol) {
+        Watchlist watchlist = watchlistRepository.findByName(listName);
+        if (watchlist != null) {
+            watchlist.addStock(stockSymbol);
+            stockService.addStock(stockSymbol);
+            return watchlistRepository.save(watchlist);
         }
         return null;
     }
 
-    public void removeStock(String stockSymbol) {
-        watchlistRepository.deleteByStockSymbol(stockSymbol);
-    }
-
-    public void clearWatchlist() {
-        watchlistRepository.deleteAll();
-    }
-
     @Override
-    public WatchlistItemBoundary updateStockPrice(String stockSymbol, double price) {
-        WatchlistItem watchlistItem = watchlistRepository.findByStockSymbol(stockSymbol);
-        if (watchlistItem==null) {
-            return null;
+    public Watchlist removeStockFromWatchlist(String listName, String stockSymbol) {
+        Watchlist watchlist = watchlistRepository.findByName(listName);
+        if (watchlist != null) {
+            watchlist.removeStock(stockSymbol);
+            return watchlistRepository.save(watchlist);
         }
-        watchlistItem.setPrice(price);
-        watchlistRepository.save(watchlistItem);
-        return new WatchlistItemBoundary(watchlistItem.getStockSymbol(), watchlistItem.getPrice());
+        return null;
     }
 }

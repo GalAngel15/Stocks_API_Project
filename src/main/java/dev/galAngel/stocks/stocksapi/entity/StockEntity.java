@@ -7,21 +7,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Document(collection = "watchlist")
-public class WatchlistItem {
+public class StockEntity {
 
     @Id
     private String id;
     private String stockSymbol;
     private double price;
 
-    public WatchlistItem() {
+    public StockEntity() {
     }
 
-    public WatchlistItem(String stockSymbol) {
+    public StockEntity(String stockSymbol) {
         this.stockSymbol = stockSymbol;
     }
 
-    public WatchlistItem(String stockSymbol, double price) {
+    public StockEntity(String stockSymbol, double price) {
         this.stockSymbol = stockSymbol;
         this.price = price;
     }
