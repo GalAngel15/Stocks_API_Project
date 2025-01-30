@@ -10,14 +10,14 @@ import java.util.List;
 @Service
 public class StockEntityServiceImpl implements StockEntityService {
 
-    private final StockRepository watchlistRepository;
+    private final StockRepository stockRepository;
 
-    public StockEntityServiceImpl(StockRepository watchlistRepository) {
-        this.watchlistRepository = watchlistRepository;
+    public StockEntityServiceImpl(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
     }
 
     public List<StockBoundary> getAllStocks() {
-        return watchlistRepository
+        return stockRepository
                 .findAll()
                 .stream()
                 .map(item-> new StockBoundary(item.getStockSymbol(), item.getPrice()))
@@ -25,27 +25,36 @@ public class StockEntityServiceImpl implements StockEntityService {
     }
 
     public StockBoundary addStock(String stockSymbol) {
-        if (watchlistRepository.findByStockSymbol(stockSymbol)==null) {
+        if (stockRepository.findByStockSymbol(stockSymbol)==null) {
             StockEntity stockEntity = new StockEntity(stockSymbol);
-            watchlistRepository.save(stockEntity);
+            stockRepository.save(stockEntity);
             return new StockBoundary(stockEntity.getStockSymbol(), stockEntity.getPrice());
         }
         return null;
     }
 
     public void removeStock(String stockSymbol) {
-        watchlistRepository.deleteByStockSymbol(stockSymbol);
+        stockRepository.deleteByStockSymbol(stockSymbol);
     }
 
 
     @Override
     public StockBoundary updateStockPrice(String stockSymbol, double price) {
-        StockEntity stockEntity = watchlistRepository.findByStockSymbol(stockSymbol);
+        StockEntity stockEntity = stockRepository.findByStockSymbol(stockSymbol);
         if (stockEntity ==null) {
             return null;
         }
         stockEntity.setPrice(price);
-        watchlistRepository.save(stockEntity);
+        stockRepository.save(stockEntity);
+        return new StockBoundary(stockEntity.getStockSymbol(), stockEntity.getPrice());
+    }
+
+    @Override
+    public StockBoundary getStockBySymbol(String stockSymbol) {
+        StockEntity stockEntity = stockRepository.findByStockSymbol(stockSymbol);
+        if (stockEntity ==null) {
+            return null;
+        }
         return new StockBoundary(stockEntity.getStockSymbol(), stockEntity.getPrice());
     }
 }

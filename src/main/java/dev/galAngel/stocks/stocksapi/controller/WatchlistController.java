@@ -1,6 +1,7 @@
 package dev.galAngel.stocks.stocksapi.controller;
 
 import dev.galAngel.stocks.stocksapi.boundary.StockBoundary;
+import dev.galAngel.stocks.stocksapi.boundary.WatchlistBoundary;
 import dev.galAngel.stocks.stocksapi.entity.Watchlist;
 import dev.galAngel.stocks.stocksapi.service.StockEntityService;
 import dev.galAngel.stocks.stocksapi.service.WatchlistService;
@@ -37,7 +38,7 @@ public class WatchlistController {
     }
 
     @GetMapping("/{name}")
-    public Watchlist getWatchlistByName(@PathVariable String name) {
+    public WatchlistBoundary getWatchlistByName(@PathVariable String name) {
         return watchlistService.getWatchlistByName(name);
     }
 
@@ -53,11 +54,11 @@ public class WatchlistController {
 
     @PutMapping("/{name}/add-stock")
     public Watchlist addStockToWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
-        return watchlistService.addStockToWatchlist(name.toUpperCase(), stockSymbol);
+        return watchlistService.addStockToWatchlist(name, stockSymbol.toUpperCase());
     }
 
     @PutMapping("/{name}/remove-stock")
     public Watchlist removeStockFromWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
-        return watchlistService.removeStockFromWatchlist(name.toUpperCase(), stockSymbol);
+        return watchlistService.removeStockFromWatchlist(name, stockSymbol.toUpperCase());
     }
 }

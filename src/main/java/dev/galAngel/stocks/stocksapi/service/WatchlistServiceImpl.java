@@ -1,11 +1,14 @@
 package dev.galAngel.stocks.stocksapi.service;
 
+import dev.galAngel.stocks.stocksapi.boundary.StockBoundary;
+import dev.galAngel.stocks.stocksapi.boundary.WatchlistBoundary;
 import dev.galAngel.stocks.stocksapi.entity.StockEntity;
 import dev.galAngel.stocks.stocksapi.entity.Watchlist;
 import dev.galAngel.stocks.stocksapi.repository.StockRepository;
 import dev.galAngel.stocks.stocksapi.repository.WatchlistRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,8 +34,15 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist getWatchlistByName(String name) {
-        return watchlistRepository.findByName(name);
+    public WatchlistBoundary getWatchlistByName(String name) {
+        Watchlist wl= watchlistRepository.findByName(name);
+        if(wl==null)
+            return null;
+        List<StockBoundary> stocks=new ArrayList<>();
+        for(String stockSymbol:wl.getStockSymbols()){
+            stocks.add(stockService.getStockBySymbol(stockSymbol));
+        }
+        return new WatchlistBoundary(wl.getName(),stocks);
     }
 
     @Override
@@ -48,7 +58,7 @@ public class WatchlistServiceImpl implements WatchlistService {
             stockService.addStock(stockSymbol);
             return watchlistRepository.save(watchlist);
         }
-        return null;
+        throw new RuntimeException("Watchlist not found");
     }
 
     @Override

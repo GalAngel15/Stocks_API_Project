@@ -13,4 +13,6 @@ public interface StockEntityService {
     void removeStock(String stockSymbol);
 
     StockBoundary updateStockPrice(String stockSymbol, double price);
+
+    StockBoundary getStockBySymbol(String stockSymbol);
 }
