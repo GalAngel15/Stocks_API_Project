@@ -21,7 +21,7 @@ public class StockController {
 
     @GetMapping
     public GlobalQuoteResponse.GlobalQuote getStockQuote(@RequestParam String symbol) {
-        return stockService.getStockQuote(symbol);
+        return stockService.getStockQuote(symbol.toUpperCase());
     }
 
     @GetMapping("/intraday")
@@ -29,7 +29,7 @@ public class StockController {
             @RequestParam String symbol,
             @RequestParam(required = false, defaultValue = "5min") String interval
     ) {
-        return stockService.getIntraday(symbol, interval);
+        return stockService.getIntraday(symbol.toUpperCase(), interval);
     }
 
     @GetMapping("/time-series")
@@ -37,7 +37,7 @@ public class StockController {
             @RequestParam(required = false, defaultValue = "TIME_SERIES_DAILY") String function,
             @RequestParam String symbol
     ) {
-        return stockService.getTimeSeries(function, symbol);
+        return stockService.getTimeSeries(function, symbol.toUpperCase());
     }
 
     @GetMapping("/indicators")
@@ -48,6 +48,6 @@ public class StockController {
             @RequestParam int time_period,
             @RequestParam String series_type
     ) {
-        return stockService.getIndicator(new TechIndicatorsBoundary(function, symbol, interval, time_period, series_type));
+        return stockService.getIndicator(new TechIndicatorsBoundary(function, symbol.toUpperCase(), interval, time_period, series_type));
     }
 }

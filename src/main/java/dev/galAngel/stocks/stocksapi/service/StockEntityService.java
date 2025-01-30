@@ -12,7 +12,5 @@ public interface StockEntityService {
 
     void removeStock(String stockSymbol);
 
-    void clearWatchlist();
-
     StockBoundary updateStockPrice(String stockSymbol, double price);
 }

@@ -31,7 +31,7 @@ public class WatchlistController {
         return watchlistService.getAllWatchlists();
     }
 
-    @GetMapping
+    @GetMapping("/stocks")
     public List<StockBoundary> getAllStocks() {
         return stockService.getAllStocks();
     }
@@ -46,13 +46,18 @@ public class WatchlistController {
         watchlistService.deleteWatchlist(name);
     }
 
+    @DeleteMapping("/stock/{name}")
+    public void deleteStock(@PathVariable String name) {
+        stockService.removeStock(name.toUpperCase());
+    }
+
     @PutMapping("/{name}/add-stock")
     public Watchlist addStockToWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
-        return watchlistService.addStockToWatchlist(name, stockSymbol);
+        return watchlistService.addStockToWatchlist(name.toUpperCase(), stockSymbol);
     }
 
     @PutMapping("/{name}/remove-stock")
     public Watchlist removeStockFromWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
-        return watchlistService.removeStockFromWatchlist(name, stockSymbol);
+        return watchlistService.removeStockFromWatchlist(name.toUpperCase(), stockSymbol);
     }
 }

@@ -16,7 +16,7 @@ public class StockEntityServiceImpl implements StockEntityService {
         this.watchlistRepository = watchlistRepository;
     }
 
-    public List<StockBoundary> getAllWatchlistItems() {
+    public List<StockBoundary> getAllStocks() {
         return watchlistRepository
                 .findAll()
                 .stream()
@@ -37,9 +37,6 @@ public class StockEntityServiceImpl implements StockEntityService {
         watchlistRepository.deleteByStockSymbol(stockSymbol);
     }
 
-    public void clearWatchlist() {
-        watchlistRepository.deleteAll();
-    }
 
     @Override
     public StockBoundary updateStockPrice(String stockSymbol, double price) {
