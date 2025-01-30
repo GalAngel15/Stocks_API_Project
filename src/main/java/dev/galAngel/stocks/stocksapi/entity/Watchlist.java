@@ -1,5 +1,7 @@
 package dev.galAngel.stocks.stocksapi.entity;
 
+import dev.galAngel.stocks.stocksapi.boundary.StockBoundary;
+import dev.galAngel.stocks.stocksapi.boundary.WatchlistBoundary;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -30,7 +32,6 @@ public class Watchlist {
     public void removeStock(String stockSymbol) {
         stockSymbols.remove(stockSymbol);
     }
-
 
 
 

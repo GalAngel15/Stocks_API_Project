@@ -38,11 +38,7 @@ public class WatchlistServiceImpl implements WatchlistService {
         Watchlist wl= watchlistRepository.findByName(name);
         if(wl==null)
             return null;
-        List<StockBoundary> stocks=new ArrayList<>();
-        for(String stockSymbol:wl.getStockSymbols()){
-            stocks.add(stockService.getStockBySymbol(stockSymbol));
-        }
-        return new WatchlistBoundary(wl.getName(),stocks);
+        return WatchlistToWatchlistBoundary(wl);
     }
 
     @Override
@@ -51,23 +47,31 @@ public class WatchlistServiceImpl implements WatchlistService {
     }
 
     @Override
-    public Watchlist addStockToWatchlist(String listName, String stockSymbol) {
+    public WatchlistBoundary addStockToWatchlist(String listName, String stockSymbol) {
         Watchlist watchlist = watchlistRepository.findByName(listName);
         if (watchlist != null) {
             watchlist.addStock(stockSymbol);
             stockService.addStock(stockSymbol);
-            return watchlistRepository.save(watchlist);
+            return WatchlistToWatchlistBoundary(watchlistRepository.save(watchlist));
         }
         throw new RuntimeException("Watchlist not found");
     }
 
     @Override
-    public Watchlist removeStockFromWatchlist(String listName, String stockSymbol) {
+    public WatchlistBoundary removeStockFromWatchlist(String listName, String stockSymbol) {
         Watchlist watchlist = watchlistRepository.findByName(listName);
         if (watchlist != null) {
             watchlist.removeStock(stockSymbol);
-            return watchlistRepository.save(watchlist);
+            return WatchlistToWatchlistBoundary(watchlistRepository.save(watchlist));
         }
         return null;
+    }
+
+    public WatchlistBoundary WatchlistToWatchlistBoundary(Watchlist watchlist){
+        List<StockBoundary> stocks=new ArrayList<>();
+        for(String stockSymbol:watchlist.getStockSymbols()){
+            stocks.add(stockService.getStockBySymbol(stockSymbol));
+        }
+        return new WatchlistBoundary(watchlist.getName(),stocks);
     }
 }

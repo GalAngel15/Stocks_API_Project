@@ -53,12 +53,12 @@ public class WatchlistController {
     }
 
     @PutMapping("/{name}/add-stock")
-    public Watchlist addStockToWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
+    public WatchlistBoundary addStockToWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
         return watchlistService.addStockToWatchlist(name, stockSymbol.toUpperCase());
     }
 
     @PutMapping("/{name}/remove-stock")
-    public Watchlist removeStockFromWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
+    public WatchlistBoundary removeStockFromWatchlist(@PathVariable String name, @RequestParam String stockSymbol) {
         return watchlistService.removeStockFromWatchlist(name, stockSymbol.toUpperCase());
     }
 }

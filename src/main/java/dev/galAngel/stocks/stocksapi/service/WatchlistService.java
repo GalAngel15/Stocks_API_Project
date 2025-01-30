@@ -10,7 +10,7 @@ public interface WatchlistService {
     List<Watchlist> getAllWatchlists();
     WatchlistBoundary getWatchlistByName(String name);
     void deleteWatchlist(String name);
-    Watchlist addStockToWatchlist(String listName, String stockSymbol);
-    Watchlist removeStockFromWatchlist(String listId, String stockSymbol);
+    WatchlistBoundary addStockToWatchlist(String listName, String stockSymbol);
+    WatchlistBoundary removeStockFromWatchlist(String listId, String stockSymbol);
 }
 
